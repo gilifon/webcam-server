@@ -3,6 +3,7 @@ import cv2
 import PySpin
 import threading
 import cv2
+import time
 
 class AcquisitionCamera:
     def __init__(self):
@@ -68,6 +69,7 @@ class AcquisitionCamera:
 
     def serve_image(self):
         while True:
+            time.sleep(0.02)
             img = self.get_image()
             if img is not None:
                 yield (b'--frame\r\n'
@@ -80,6 +82,7 @@ if __name__ == "__main__":
         def image_loop(stop_event):
             while not stop_event.is_set():
                 cam.acquire_image()
+                time.sleep(0.01)
         stop_event = threading.Event()
         t = threading.Thread(target=image_loop, daemon=True, args=(stop_event,))
         t.start()
